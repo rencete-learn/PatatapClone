@@ -1,22 +1,14 @@
-// Make a symbol of a circle
-var base = Shape.Circle(view.center, 60)
-base.fillColor = 'black'
-var symbol = new Symbol(base);
-
 function onKeyDown(event) {
-    // Place circle in random location
-    symbol.place(view.viewSize * Point.random())
+    if(event.key.match(/^[a-z]$/)) {
+        var index = event.key.codePointAt(0) % 97
 
-    // Select last placed symbol
-    var ps = project.activeLayer.lastChild
-    // Randomize the size of the circle
-    var newRadius = Math.random() * (ps.bounds.width) + 60
-    ps.bounds.width = newRadius
-    ps.bounds.height = ps.bounds.width
-    return false
+        // Place circle in random location
+        var newPath = Path.Circle(view.size * Point.random(), 500)
+        newPath.fillColor = 'red'
+        newPath.fillColor.hue += index * Math.floor(360 / 24)
+    }
+    return false    
 }
-
-
 
 // Reduce the size until it's gone
 function onFrame(event) {    
@@ -24,10 +16,9 @@ function onFrame(event) {
 		var item = project.activeLayer.children[i]
         
         // Reduce the size
-        item.bounds.width -= 3
-        item.bounds.height -= 3
+        item.scale(0.9)
 
-		if (item.bounds.width <= 3) {
+		if (item.area <= 1) {
 			item.remove()
 		}
 	}
